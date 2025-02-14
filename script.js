@@ -119,7 +119,29 @@ function toggleDayPanel(header) {
 function createRecurringEventsContent() {
     return `
         <div class="recurring-events-view">
-            <p>Recurring Events content goes here...</p>
+            <div class="form-group">
+                <input type="text" placeholder="Event Name">
+            </div>
+            
+            <div class="form-group">
+                <div class="weekday-buttons">
+                    <button class="weekday-btn">M</button>
+                    <button class="weekday-btn">T</button>
+                    <button class="weekday-btn">W</button>
+                    <button class="weekday-btn">R</button>
+                    <button class="weekday-btn">F</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" placeholder="Start Time --:--" class="time-input" id="start-time" maxlength="5">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" placeholder="End Time --:--" class="time-input" id="end-time" maxlength="5">
+            </div>
+            
+            <button class="add-event-btn">Add</button>
         </div>
     `;
 }
@@ -265,6 +287,55 @@ function initializeRegistrationSidebar() {
             }
         });
     }
+
+    // Weekday button functionality
+    const weekdayBtns = document.querySelectorAll('.weekday-btn');
+    weekdayBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.classList.toggle('selected');
+        });
+    });
+
+    // Time input formatting
+    const timeInputs = document.querySelectorAll('.time-input');
+    timeInputs.forEach(input => {
+        input.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            
+            if (value.length >= 2) {
+                // Insert colon after the first two digits
+                value = value.slice(0, 2) + ':' + value.slice(2);
+            }
+            
+            // Validate hours and minutes
+            const parts = value.split(':');
+            if (parts[0] && parseInt(parts[0]) > 23) {
+                parts[0] = '23';
+            }
+            if (parts[1] && parseInt(parts[1]) > 59) {
+                parts[1] = '59';
+            }
+            
+            // Update the input value
+            if (parts.length === 2) {
+                e.target.value = parts.join(':');
+            } else {
+                e.target.value = value;
+            }
+        });
+
+        // Add blur event to format incomplete times
+        input.addEventListener('blur', function(e) {
+            let value = e.target.value;
+            if (value) {
+                const parts = value.split(':');
+                if (parts[0] && parts[0].length === 1) parts[0] = '0' + parts[0];
+                if (parts[1] && parts[1].length === 1) parts[1] = '0' + parts[1];
+                if (!parts[1]) parts[1] = '00';
+                e.target.value = parts.join(':');
+            }
+        });
+    });
 }
 
 // Add this function to create the export dropdown content
@@ -273,6 +344,22 @@ function createExportDropdown() {
         <div class="dropdown-content export-dropdown">
             <a href="#" class="export-calendar">Export to Calendar</a>
             <a href="#" class="export-pdf">Export as PDF</a>
+        </div>
+    `;
+}
+
+// Update the semester dropdown content
+function createSemesterDropdown() {
+    return `
+        <div class="semester-content">
+            <a href="#">Summer 2025</a>
+            <a href="#">Spring 2025</a>
+            <a href="#">Fall 2024</a>
+            <a href="#">Summer 2024</a>
+            <a href="#">Spring 2024</a>
+            <a href="#">Fall 2023</a>
+            <a href="#">Summer 2023</a>
+            <a href="#">Spring 2023</a>
         </div>
     `;
 }
@@ -536,4 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Update the semester button to show Spring 2025 by default
+    document.querySelector('.semester-button').innerHTML = 'Spring 2025 <span class="arrow">▼</span>';
 });
