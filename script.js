@@ -442,20 +442,19 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
         this.classList.add('active');
+        
+        // Always recreate the registration sidebar
         sidebar.innerHTML = createRegistrationSidebar();
         initializeRegistrationSidebar();
     });
 
-    // Add Map navigation handler
+    // Update Map navigation handler
     mapLink.addEventListener('click', function(e) {
         e.preventDefault();
         document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
         this.classList.add('active');
         
-        // Store the current sidebar content
-        const currentSidebarContent = sidebar.innerHTML;
-        
-        // Update sidebar with map view and styles
+        // Update sidebar with map view
         sidebar.innerHTML = createMapSidebar();
         
         // Add tab switching functionality
