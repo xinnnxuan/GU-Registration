@@ -374,7 +374,7 @@ function addEventToSchedule(eventName, days, startTime, endTime) {
     });
 }
 
-// Update the createRecurringEventsContent function to handle the Add button click
+// Update the createRecurringEventsContent function to remove the export button
 function createRecurringEventsContent() {
     return `
         <div class="recurring-events-view">
@@ -401,7 +401,6 @@ function createRecurringEventsContent() {
             </div>
             
             <button class="add-event-btn">Add</button>
-            <button class="export-calendar-btn">Export to Calendar</button>
         </div>
     `;
 }
@@ -633,27 +632,60 @@ function initializeRegistrationSidebar() {
     const recurringEventsView = document.querySelector('.recurring-events-view');
     const prereqTreeView = document.querySelector('.prereq-tree-view');
     
-    // Add tab switching functionality
-    coursesTab.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.classList.add('active');
-        recurringEventsTab.classList.remove('active');
-        prereqTreeTab.classList.remove('active');
-        coursesView.style.display = 'block';
-        recurringEventsView.style.display = 'none';
-        prereqTreeView.style.display = 'none';
-    });
-    
-    recurringEventsTab.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.classList.add('active');
-        coursesTab.classList.remove('active');
-        recurringEventsTab.classList.remove('active');
-        prereqTreeTab.classList.remove('active');
-        recurringEventsView.style.display = 'block';
-        coursesView.style.display = 'none';
-        prereqTreeView.style.display = 'none';
-    });
+    // Tab switching
+    if (recurringEventsTab) {
+        recurringEventsTab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all tabs
+            coursesTab.classList.remove('active');
+            prereqTreeTab.classList.remove('active');
+            
+            // Add active class to recurring events tab
+            recurringEventsTab.classList.add('active');
+            
+            // Show/hide views
+            coursesView.style.display = 'none';
+            recurringEventsView.style.display = 'block';
+            prereqTreeView.style.display = 'none';
+        });
+    }
+
+    if (coursesTab) {
+        coursesTab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all tabs
+            recurringEventsTab.classList.remove('active');
+            prereqTreeTab.classList.remove('active');
+            
+            // Add active class to courses tab
+            coursesTab.classList.add('active');
+            
+            // Show/hide views
+            coursesView.style.display = 'block';
+            recurringEventsView.style.display = 'none';
+            prereqTreeView.style.display = 'none';
+        });
+    }
+
+    if (prereqTreeTab) {
+        prereqTreeTab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all tabs
+            coursesTab.classList.remove('active');
+            recurringEventsTab.classList.remove('active');
+            
+            // Add active class to pre-req tree tab
+            prereqTreeTab.classList.add('active');
+            
+            // Show/hide views
+            coursesView.style.display = 'none';
+            recurringEventsView.style.display = 'none';
+            prereqTreeView.style.display = 'block';
+        });
+    }
 
     // Initialize division buttons
     const divisionBtns = document.querySelectorAll('.division-btn');
@@ -965,34 +997,68 @@ function initializeRegistrationSidebar() {
         });
     }
 
-    // Add tab switching for Pre-Req Tree
-    if (prereqTreeTab) {
-        prereqTreeTab.addEventListener('click', function(e) {
+    // Export Dropdown
+    const exportContainer = document.querySelector('.export-container');
+    const exportButton = exportContainer.querySelector('.export-button');
+    
+    if (exportButton) {
+        // Add the dropdown content after the button
+        exportContainer.insertAdjacentHTML('beforeend', createExportDropdown());
+        
+        const exportDropdown = exportContainer.querySelector('.export-dropdown');
+        
+        // Toggle dropdown on button click
+        exportButton.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
-            // Update active tab
-            coursesTab.classList.remove('active');
-            recurringEventsTab.classList.remove('active');
-            prereqTreeTab.classList.add('active');
+            // Close user dropdown if open
+            const userDropdown = document.querySelector('.user-dropdown .dropdown-content');
+            if (userDropdown) {
+                userDropdown.classList.remove('show');
+            }
             
-            // Show/hide views
-            coursesView.style.display = 'none';
-            recurringEventsView.style.display = 'none';
-            prereqTreeView.style.display = 'block';
+            exportDropdown.classList.toggle('show');
+            const arrow = this.querySelector('.arrow');
+            if (arrow) {
+                arrow.style.transform = exportDropdown.classList.contains('show') 
+                    ? 'rotate(180deg)' 
+                    : 'rotate(0deg)';
+            }
         });
-    }
 
-    // Add export calendar functionality
-    const exportBtn = document.querySelector('.export-calendar-btn');
-    if (exportBtn) {
-        exportBtn.addEventListener('click', exportToCalendar);
+        // Handle export actions
+        const exportCalendar = exportContainer.querySelector('.export-calendar');
+        const exportPDF = exportContainer.querySelector('.export-pdf');
+
+        exportCalendar.addEventListener('click', function(e) {
+            e.preventDefault();
+            exportToCalendar(); // Call the export function
+            exportDropdown.classList.remove('show');
+            exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
+        });
+
+        exportPDF.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Exporting as PDF...');
+            exportDropdown.classList.remove('show');
+            exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!exportContainer.contains(e.target)) {
+                exportDropdown.classList.remove('show');
+                exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
+            }
+        });
     }
 }
 
-// Add this function to create the export dropdown content
+// Update the createExportDropdown function
 function createExportDropdown() {
     return `
-        <div class="dropdown-content export-dropdown">
+        <div class="export-dropdown">
             <a href="#" class="export-calendar">Export to Calendar</a>
             <a href="#" class="export-pdf">Export as PDF</a>
         </div>
@@ -1015,15 +1081,8 @@ function createSemesterDropdown() {
     `;
 }
 
-// Update the export calendar function
+// Add the exportToCalendar function if it doesn't exist
 function exportToCalendar() {
-    // Get all events from the schedule grid
-    const events = document.querySelectorAll('.event-block');
-    if (events.length === 0) {
-        alert('No events to export. Please add some events first.');
-        return;
-    }
-
     // Current timestamp for DTSTAMP
     const now = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
@@ -1035,33 +1094,32 @@ function exportToCalendar() {
     ].join('\r\n');
 
     // Add each event
-    events.forEach(eventBlock => {
+    document.querySelectorAll('.event-block').forEach(eventBlock => {
         const eventName = eventBlock.querySelector('.event-name').textContent;
         const [startTime, endTime] = eventBlock.querySelector('.event-time').textContent.split(' - ');
         
         // Convert times to UTC format
-        const [startHour, startMinute] = startTime.split(':').map(Number);
-        const [endHour, endMinute] = endTime.split(':').map(Number);
-        
-        // Get the parent cell to determine the day
-        const cell = eventBlock.closest('td');
-        const dayIndex = Array.from(cell.parentElement.children).indexOf(cell) - 1; // -1 because first column is time
-        const day = ['MO', 'TU', 'WE', 'TH', 'FR'][dayIndex];
+        const [startHour, startMinute] = startTime.split(':');
+        const [endHour, endMinute] = endTime.split(':');
         
         // Use next Monday as the start date
         const nextMonday = getNextMonday();
         const dtStart = formatDateForICS(nextMonday, startHour, startMinute);
         const dtEnd = formatDateForICS(nextMonday, endHour, endMinute);
 
+        // Create RRULE based on selected days
+        const selectedDays = ['MO', 'TU', 'WE', 'TH', 'FR'];
+        const rrule = `RRULE:FREQ=WEEKLY;BYDAY=${selectedDays.join(',')};UNTIL=20251231T235959Z`;
+
         // Add event to calendar
         icsContent += '\r\n' + [
             'BEGIN:VEVENT',
-            'UID:' + Date.now() + Math.random().toString(36).substring(2) + '@gonzaga.edu',
+            'UID:' + Date.now() + '@gonzaga.edu',
             'DTSTAMP:' + now,
             'SUMMARY:' + eventName,
             'DTSTART:' + dtStart,
             'DTEND:' + dtEnd,
-            'RRULE:FREQ=WEEKLY;BYDAY=' + day + ';UNTIL=20251231T235959Z',
+            rrule,
             'END:VEVENT'
         ].join('\r\n');
     });
@@ -1081,17 +1139,14 @@ function exportToCalendar() {
     URL.revokeObjectURL(url);
 }
 
-// Helper function to get next Monday's date
+// Helper functions
 function getNextMonday() {
     const today = new Date();
     const day = today.getDay();
     const diff = day === 0 ? 1 : 8 - day;
-    const nextMonday = new Date(today);
-    nextMonday.setDate(today.getDate() + diff);
-    return nextMonday;
+    return new Date(today.setDate(today.getDate() + diff));
 }
 
-// Helper function to format date for ICS file
 function formatDateForICS(date, hours, minutes) {
     return date.getFullYear() +
            String(date.getMonth() + 1).padStart(2, '0') +
@@ -1302,63 +1357,6 @@ document.addEventListener('DOMContentLoaded', function() {
             scheduleView.style.display = 'block';
         });
     });
-
-    // Export Dropdown
-    const exportContainer = document.querySelector('.export-container');
-    const exportButton = exportContainer.querySelector('.export-button');
-    
-    if (exportButton) {
-        // Add the dropdown content after the button
-        exportContainer.insertAdjacentHTML('beforeend', createExportDropdown());
-        
-        const exportDropdown = exportContainer.querySelector('.export-dropdown');
-        
-        // Toggle dropdown on button click
-        exportButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Close user dropdown if open
-            const userDropdown = document.querySelector('.user-dropdown .dropdown-content');
-            if (userDropdown) {
-                userDropdown.classList.remove('show');
-            }
-            
-            exportDropdown.classList.toggle('show');
-            const arrow = this.querySelector('.arrow');
-            if (arrow) {
-                arrow.style.transform = exportDropdown.classList.contains('show') 
-                    ? 'rotate(180deg)' 
-                    : 'rotate(0deg)';
-            }
-        });
-
-        // Handle export actions
-        const exportCalendar = exportContainer.querySelector('.export-calendar');
-        const exportPDF = exportContainer.querySelector('.export-pdf');
-
-        exportCalendar.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Exporting to calendar...');
-            exportDropdown.classList.remove('show');
-            exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
-        });
-
-        exportPDF.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Exporting as PDF...');
-            exportDropdown.classList.remove('show');
-            exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!exportContainer.contains(e.target)) {
-                exportDropdown.classList.remove('show');
-                exportButton.querySelector('.arrow').style.transform = 'rotate(0deg)';
-            }
-        });
-    }
 
     // Update the semester button to show Spring 2025 by default
     document.querySelector('.semester-button').innerHTML = 'Spring 2025 <span class="arrow">▼</span>';

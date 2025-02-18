@@ -170,20 +170,20 @@ header {
     color: #142A50;
 }
 main {
-    display: grid;
-    grid-template-columns: 300px 1fr;
+    display: flex;
     gap: 20px;
     padding: 20px;
-    height: calc(100vh - 100px);
+    max-width: 1400px;  /* Set a max-width for large screens */
+    margin: 0 auto;     /* Center the content */
 }
 .sidebar {
+    flex: 0 0 320px;  /* Fixed width of 320px, won't grow or shrink */
+    min-width: 320px; /* Ensure minimum width */
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    height: 100%;
-    overflow-y: auto;
-    min-width: 320px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: fit-content;
 }
 .sidebar-tabs {
     display: flex;
@@ -201,6 +201,7 @@ main {
     font-size: 0.9em;
     white-space: nowrap;
     flex-shrink: 0;
+    transition: color 0.2s;
 }
 .sidebar-tabs a.active {
     color: #142A50;
@@ -265,13 +266,13 @@ main {
 .empty-space {
     display: none;
 }
-.schedule-grid {
+.schedule-container {
+    flex: 1;          /* Take up remaining space */
     background-color: white;
-    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    height: 100%;
-    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 600px; /* Ensure minimum width for schedule */
 }
 
 .schedule-grid table {
@@ -296,6 +297,12 @@ main {
 .schedule-grid td:first-child {
     left: 0;
     width: 80px;
+    text-align: center;
+    vertical-align: middle;  /* Center vertically */
+    font-size: 0.9em;
+    padding: 0;
+    height: 60px;
+    line-height: 60px;  /* Match the height for vertical centering */
 }
 
 .schedule-grid td {
@@ -1147,10 +1154,14 @@ body.dark-mode .dropdown-item:hover {
 @media screen and (max-width: 768px) {
     /* Main layout */
     main {
-        grid-template-columns: 1fr;  /* Stack sidebar and schedule vertically */
         padding: 10px;
-        height: auto;
-        gap: 10px;
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .schedule-container {
+        width: 100%;
+        min-width: unset;
     }
 
     /* Header and navigation */
@@ -1181,12 +1192,6 @@ body.dark-mode .dropdown-item:hover {
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         padding-top: 10px;
         padding-left: 0;
-    }
-
-    /* Sidebar */
-    .sidebar {
-        height: auto;
-        max-height: 500px;
     }
 
     /* Schedule grid */
@@ -1762,4 +1767,68 @@ body.dark-mode .export-calendar-btn {
 
 body.dark-mode .export-calendar-btn:hover {
     background-color: #2868A6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    main {
+        padding: 10px;
+        flex-direction: column;
+    }
+
+    .sidebar,
+    .schedule-container {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+/* Update time column styles */
+.schedule-grid td:first-child {
+    left: 0;
+    width: 80px;
+    text-align: center;
+    vertical-align: middle;  /* Center vertically */
+    font-size: 0.9em;
+    color: #495057;
+    padding: 0;
+    height: 60px;
+    line-height: 60px;  /* Match the height for vertical centering */
+}
+
+/* Ensure consistent styling in dark mode */
+body.dark-mode .schedule-grid td:first-child {
+    color: #C4C8CE;
+    background-color: #1e3a6d;
+}
+
+/* Update sidebar tab styles */
+.sidebar-tabs a {
+    color: #C4C8CE;
+    text-decoration: none;
+    padding: 5px 0;
+    position: relative;
+    font-size: 0.9em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.sidebar-tabs a.active {
+    color: #142A50;  /* Blue color when active */
+}
+
+.sidebar-tabs a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #B41231;  /* Red underline */
+}
+
+/* Dark mode styles */
+body.dark-mode .sidebar-tabs a.active {
+    color: #4A90E2;  /* Lighter blue for dark mode */
 }
