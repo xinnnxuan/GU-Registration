@@ -270,11 +270,12 @@ main {
 .schedule-container {
     flex: 1;          /* Take up remaining space */
     background-color: white;
-    border-radius: 8px;
+    border-radius: 8px;  /* Match sidebar's border radius */
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     min-width: 600px; /* Ensure minimum width for schedule */
     border-color: #e0e4e8;
+    overflow: hidden;  /* Ensure content doesn't overflow rounded corners */
 }
 
 .schedule-grid table {
@@ -283,63 +284,82 @@ main {
     table-layout: fixed;
 }
 
-.schedule-grid th, 
-.schedule-grid td:first-child {
-    position: sticky;
-    background-color: #f8f9fa;
-    z-index: 1;
-    font-weight: 500;
-    color: #495057;
-}
-
+/* Schedule grid header styles - light mode */
 .schedule-grid th {
     top: 0;
     position: relative;
-    background: #023373 !important;
+    background-color: white !important;
+    color: #142A50 !important;
+    border: 1px solid #e0e4e8 !important;
+    font-weight: 500;
+}
+
+/* Dark mode header styles - override light mode */
+body.dark-mode .schedule-grid th {
+    background-color: #023373 !important;
     color: #ffffff !important;
-    border: none !important;
-}
-
-.schedule-grid th::after {
-    display: none !important;  /* Hide any pseudo-element arrows */
-}
-
-/* Ensure no dropdown styling on table headers */
-.schedule-grid th {
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    background-image: none !important;
+    border-color: #012454 !important;
 }
 
 .schedule-grid td:first-child {
     left: 0;
     width: 80px;
     text-align: center;
-    vertical-align: middle;  /* Center vertically */
+    vertical-align: middle;
     font-size: 0.9em;
     padding: 0;
     height: 60px;
-    line-height: 60px;  /* Match the height for vertical centering */
-    background-color: white;
+    line-height: 60px;
 }
 
 .schedule-grid td {
     position: relative;
-    height: 60px; /* Fixed height for each hour */
+    height: 60px;
     padding: 0;
     border: 1px solid #e0e4e8;
     vertical-align: top;
-    background-color: white;
-}
-
-.schedule-grid tr:nth-child(even) {
-    background-color: #f8f9fa;
+    background-color: white !important;
 }
 
 .schedule-grid th:not(:first-child),
 .schedule-grid td:not(:first-child) {
     width: calc((100% - 80px) / 5);
+}
+
+/* Dark mode schedule styles */
+body.dark-mode .schedule-container {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    border-radius: 8px;
+}
+
+body.dark-mode .schedule-grid {
+    background-color: #023373 !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+body.dark-mode .schedule-grid th, 
+body.dark-mode .schedule-grid td:first-child {
+    background-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .schedule-grid td {
+    background-color: #023373 !important;
+    border-color: #012454 !important;
+}
+
+body.dark-mode .schedule-grid tr:nth-child(even) td {
+    background-color: #023373 !important;
+}
+
+/* Schedule grid borders in dark mode */
+body.dark-mode .schedule-grid td,
+body.dark-mode .schedule-grid th,
+body.dark-mode .schedule-grid thead tr,
+body.dark-mode .schedule-grid thead {
+    border-color: #012454 !important;
 }
 
 .right-sidebar {
@@ -726,6 +746,8 @@ body.dark-mode .university-subtitle {
 /* Schedule grid styles in dark mode */
 body.dark-mode .schedule-grid {
     background-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
+    overflow: hidden;
 }
 
 body.dark-mode .schedule-grid th, 
@@ -1868,11 +1890,12 @@ body.dark-mode .sidebar-tabs a.active {
 body.dark-mode .schedule-container {
     background-color: #023373 !important;
     border-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
 }
 
 body.dark-mode .schedule-grid td {
     background-color: #023373 !important;
-    border-color: #023373 !important;
+    border-color: #012454 !important;  /* Darker blue divider lines */
 }
 
 body.dark-mode .schedule-grid tr:nth-child(even) td {
@@ -1886,22 +1909,24 @@ body.dark-mode .schedule-grid td:first-child {
 /* Schedule grid lines in dark mode */
 body.dark-mode .schedule-grid td,
 body.dark-mode .schedule-grid th {
-    border-color: #022859 !important;
+    border-color: #012454 !important;  /* Darker blue divider lines */
 }
 
 /* Top border of header row */
 body.dark-mode .schedule-grid thead tr {
-    border-color: #022859 !important;
+    border-color: #012454 !important;  /* Darker blue divider lines */
 }
 
 /* Horizontal divider line below header */
 body.dark-mode .schedule-grid thead {
-    border-bottom-color: #022859 !important;
+    border-bottom-color: #012454 !important;  /* Darker blue divider lines */
 }
 
 /* Background color remains #023373 */
 body.dark-mode .schedule-grid {
     background-color: #023373 !important;
+    border-radius: 8px;  /* Ensure border radius in dark mode */
+    overflow: hidden;
 }
 
 body.dark-mode .schedule-grid td {
@@ -2227,4 +2252,22 @@ body.dark-mode .export-button .arrow {
 /* Rotate arrow when dropdown is open */
 .export-button.active .arrow {
     transform: rotate(180deg);
+}
+
+/* Navigation divider lines in dark mode */
+body.dark-mode .semester-group {
+    border-right-color: #0557c5 !important;
+}
+
+body.dark-mode .user-controls {
+    border-left-color: #0557c5 !important;
+}
+
+/* Original light mode styles remain unchanged */
+.semester-group {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-controls {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
