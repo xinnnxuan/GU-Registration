@@ -1,13 +1,23 @@
 // Utility Functions
 function toggleTheme() {
     const body = document.body;
-    body.classList.toggle('dark-mode');
+    const logoImg = document.querySelector('.logo img');
+    const themeToggles = document.querySelectorAll('.theme-toggle');
     
-    const themeButtons = document.querySelectorAll('.theme-toggle');
+    body.classList.toggle('dark-mode');
     const isDarkMode = body.classList.contains('dark-mode');
+    
+    // Update theme toggle buttons text
     themeToggles.forEach(button => {
         button.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
     });
+    
+    // Update logo based on theme
+    if (isDarkMode) {
+        logoImg.src = './IMG_4570.jpg'; // Dark mode logo
+    } else {
+        logoImg.src = './IMG_4571.jpg'; // Light mode logo
+    }
 }
 
 function changeSemester(semester, element) {
