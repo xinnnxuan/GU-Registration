@@ -237,6 +237,7 @@ main {
     gap: 8px;
     margin: 10px 0;
     width: 100%;
+    position: relative;
 }
 .division-btn {
     flex: 1;  /* Make each button take up equal space */
@@ -2171,4 +2172,59 @@ body.dark-mode .weekday-btn:hover {
 /* Remove justify-content if it exists */
 .form-group .level-buttons {
     justify-content: stretch;
+}
+
+/* Add dropdown arrow */
+.level-buttons::after {
+    content: '▼';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #D0D4D9;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+/* Dark mode arrow color */
+body.dark-mode .level-buttons::after {
+    color: #023373;
+}
+
+/* Semester button arrow in light mode */
+.semester-button .arrow {
+    display: inline-block !important;
+    margin-left: 5px;
+    color: #ffffff !important;
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* Dark mode semester button arrow */
+body.dark-mode .semester-button .arrow {
+    color: #023373 !important;
+}
+
+/* Rotate arrow when dropdown is open */
+.semester-button.active .arrow {
+    transform: rotate(180deg);
+}
+
+/* Export button arrow in light mode */
+.export-button .arrow {
+    display: inline-block !important;
+    margin-left: 5px;
+    color: #ffffff !important;
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* Dark mode export button arrow */
+body.dark-mode .export-button .arrow {
+    color: #023373 !important;
+}
+
+/* Rotate arrow when dropdown is open */
+.export-button.active .arrow {
+    transform: rotate(180deg);
 }
