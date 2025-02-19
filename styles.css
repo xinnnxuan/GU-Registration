@@ -236,10 +236,10 @@ main {
     display: flex;
     gap: 8px;
     margin: 10px 0;
-    justify-content: space-between;
+    width: 100%;
 }
 .division-btn {
-    flex: 1;
+    flex: 1;  /* Make each button take up equal space */
     padding: 8px 12px;
     border: 1px solid #C4C8CE;
     background-color: transparent;
@@ -247,9 +247,9 @@ main {
     cursor: pointer;
     border-radius: 4px;
     font-size: clamp(12px, 0.9vw, 14px);
-    transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+    transition: all 0.2s ease;
     white-space: nowrap;
-    min-width: fit-content;
+    min-width: 0; /* Allow button to shrink if needed */
 }
 
 .division-btn:hover {
@@ -2103,36 +2103,6 @@ body.dark-mode .weekday-btn:hover {
 }
 
 /* Remove arrow from weekday buttons */
-.weekday-btn .arrow {
-    display: none !important;
-}
-
-/* Keep other weekday button styles */
-.weekday-btn {
-    padding: 8px 12px;
-    border: 1px solid #C4C8CE;
-    background-color: transparent;
-    color: #6c757d;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: clamp(12px, 0.9vw, 14px);
-    transition: all 0.2s ease;
-}
-
-/* Keep hover and selected states */
-.weekday-btn:hover {
-    background-color: #B41231 !important;
-    border-color: #B41231 !important;
-    color: #ffffff !important;
-}
-
-.weekday-btn.selected {
-    background-color: #023373 !important;
-    border-color: #023373 !important;
-    color: #ffffff !important;
-}
-
-/* Remove arrow from table headers */
 .schedule-grid th {
     background: #023373 !important;
     color: #ffffff !important;
@@ -2163,6 +2133,7 @@ body.dark-mode .weekday-btn:hover {
 .semester-button::after,
 .nav-button::after {
     display: none !important;
+    content: none !important;
 }
 
 /* Remove any background arrows */
@@ -2195,4 +2166,9 @@ body.dark-mode .weekday-btn:hover {
 .level-buttons::after {
     display: none !important;
     content: none !important;
+}
+
+/* Remove justify-content if it exists */
+.form-group .level-buttons {
+    justify-content: stretch;
 }
