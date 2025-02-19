@@ -293,6 +293,22 @@ main {
 
 .schedule-grid th {
     top: 0;
+    position: relative;
+    background: #023373 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.schedule-grid th::after {
+    display: none !important;  /* Hide any pseudo-element arrows */
+}
+
+/* Ensure no dropdown styling on table headers */
+.schedule-grid th {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: none !important;
 }
 
 .schedule-grid td:first-child {
@@ -1451,9 +1467,9 @@ body.dark-mode .add-event-btn:hover {
 }
 
 .weekday-btn.selected {
-    background-color: #002467 !important;
+    background-color: #023373 !important;
+    border-color: #023373 !important;
     color: #ffffff !important;
-    border: 1px solid #002467 !important;
 }
 
 /* Dark mode styles */
@@ -1463,9 +1479,9 @@ body.dark-mode .weekday-btn {
 }
 
 body.dark-mode .weekday-btn.selected {
-    background-color: #002467 !important;
-    color: #ffffff !important;
-    border-color: #002467 !important;
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
 }
 
 /* Update hover styles for both weekday and division buttons */
@@ -1939,12 +1955,10 @@ body.dark-mode .weekday-btn.selected {
 }
 
 /* Button hover state */
-body.dark-mode .division-btn:hover,
-body.dark-mode .weekday-btn:hover {
+body.dark-mode .division-btn:hover {
     background-color: #B41231 !important;
     border-color: #B41231 !important;
     color: #ffffff !important;
-    cursor: pointer;
 }
 
 /* Button normal state */
@@ -2030,4 +2044,155 @@ body.dark-mode .show .arrow {
 body.dark-mode .show .arrow {
     transform: rotate(180deg) !important;
     transition: transform 0.2s ease;
+}
+
+/* Button hover state */
+.division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Button selected/clicked state - light mode */
+.division-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode hover state - same as light mode */
+body.dark-mode .division-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode selected state - white background, blue text */
+body.dark-mode .division-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}
+
+/* Weekday button selected state in light mode */
+.weekday-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+/* Weekday button hover state */
+.weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode weekday button selected state */
+body.dark-mode .weekday-btn.selected {
+    background-color: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #023373 !important;
+}
+
+/* Dark mode weekday button hover state */
+body.dark-mode .weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+/* Remove arrow from weekday buttons */
+.weekday-btn .arrow {
+    display: none !important;
+}
+
+/* Keep other weekday button styles */
+.weekday-btn {
+    padding: 8px 12px;
+    border: 1px solid #C4C8CE;
+    background-color: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: clamp(12px, 0.9vw, 14px);
+    transition: all 0.2s ease;
+}
+
+/* Keep hover and selected states */
+.weekday-btn:hover {
+    background-color: #B41231 !important;
+    border-color: #B41231 !important;
+    color: #ffffff !important;
+}
+
+.weekday-btn.selected {
+    background-color: #023373 !important;
+    border-color: #023373 !important;
+    color: #ffffff !important;
+}
+
+/* Remove arrow from table headers */
+.schedule-grid th {
+    background: #023373 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.schedule-grid th:last-child .arrow,
+.schedule-grid th .arrow {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.schedule-grid th F {
+    content: 'F' !important;
+}
+
+/* Remove arrows from all relevant buttons */
+.division-btn .arrow,
+.weekday-btn .arrow,
+.semester-button .arrow,
+.nav-button .arrow {
+    display: none !important;
+}
+
+/* Also remove any pseudo-element arrows */
+.division-btn::after,
+.weekday-btn::after,
+.semester-button::after,
+.nav-button::after {
+    display: none !important;
+}
+
+/* Remove any background arrows */
+.division-btn,
+.weekday-btn,
+.semester-button,
+.nav-button {
+    background-image: none !important;
+}
+
+/* Remove white arrow from division buttons container */
+.level-buttons::after,
+.form-group::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Remove any pseudo elements that might be creating the arrow */
+.form-group .level-buttons,
+.form-group {
+    background-image: none !important;
+}
+
+/* Ensure no arrow on the container */
+.level-buttons {
+    position: relative;
+}
+
+.level-buttons::before,
+.level-buttons::after {
+    display: none !important;
+    content: none !important;
 }
