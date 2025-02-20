@@ -52,16 +52,17 @@ function createMapSidebar() {
                 </div>
                 <div class="tree-content">
                     <div class="tree-subitem">Lower-level</div>
-                    <div class="tree-subitem">First floor</div>
+                    <div class="tree-subitem" onclick="openJepsonFirstFloorPDF()">First floor</div>
                     <div class="tree-subitem">Second floor</div>
                 </div>
             </div>
             <div class="tree-item">
-                <div class="tree-header" onclick="toggleTreeItem(this)">
+                <div class="tree-header" onclick="openHerakPDF()">
                     <span class="building-name">Herak</span>
                     <span class="arrow">▼</span>
                 </div>
-                <div class="tree-content"></div>
+                <div class="tree-content">
+                </div>
             </div>
         </div>
         
@@ -268,7 +269,19 @@ function createContextMenu(x, y, eventBlock) {
             colorOption.style.backgroundColor = color;
             
             colorOption.addEventListener('click', () => {
-                eventBlock.style.backgroundColor = color;
+                // Get the event name to find related blocks
+                const eventName = eventBlock.querySelector('.event-name').textContent;
+                const eventTime = eventBlock.querySelector('.event-time').textContent;
+                
+                // Find all event blocks with the same name and time
+                const allEventBlocks = document.querySelectorAll('.event-block');
+                allEventBlocks.forEach(block => {
+                    if (block.querySelector('.event-name').textContent === eventName &&
+                        block.querySelector('.event-time').textContent === eventTime) {
+                        block.style.backgroundColor = color;
+                    }
+                });
+                
                 colorPicker.remove();
                 menu.remove();
             });
@@ -298,12 +311,32 @@ function createContextMenu(x, y, eventBlock) {
     menu.querySelector('.duplicate').addEventListener('click', () => {
         const clone = eventBlock.cloneNode(true);
         
-        // Set a different color for the duplicate
-        const colors = ['#808080', '#4A90E2', '#B41231', '#357ABD', '#002467'];
-        const currentColor = eventBlock.style.backgroundColor || '#808080';
-        const currentIndex = colors.indexOf(currentColor);
-        const nextColor = colors[(currentIndex + 1) % colors.length];
-        clone.style.backgroundColor = nextColor;
+        // Define colors for duplicates
+        const colors = [
+            '#E74C3C',  // Bright Red
+            '#2ECC71',  // Green
+            '#E67E22',  // Orange
+            '#9B59B6',  // Purple
+            '#1ABC9C'   // Turquoise
+        ];
+        
+        // Get current color in RGB format for accurate comparison
+        const computedStyle = window.getComputedStyle(eventBlock);
+        const currentColor = computedStyle.backgroundColor;
+        
+        // Convert hex colors to RGB for comparison
+        const availableColors = colors.filter(color => {
+            const tempDiv = document.createElement('div');
+            tempDiv.style.color = color;
+            document.body.appendChild(tempDiv);
+            const rgbColor = window.getComputedStyle(tempDiv).color;
+            document.body.removeChild(tempDiv);
+            return rgbColor !== currentColor;
+        });
+        
+        // Set a random different color for the duplicate
+        const randomColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+        clone.style.backgroundColor = randomColor;
         
         // Get original event name
         const originalName = eventBlock.querySelector('.event-name').textContent;
@@ -331,8 +364,8 @@ function createContextMenu(x, y, eventBlock) {
         
         // Calculate width and position based on total number of blocks
         const totalBlocks = existingBlocks.length + 1;
-        const blockWidth = 96 / totalBlocks; // 96% total width divided by number of blocks
-        const gap = 2 / (totalBlocks - 1); // Distribute remaining 4% as gaps
+        const blockWidth = 96 / totalBlocks;
+        const gap = 2 / (totalBlocks - 1);
         
         // Reposition all blocks
         existingBlocks.forEach((block, index) => {
@@ -360,7 +393,24 @@ function createContextMenu(x, y, eventBlock) {
     // Updated delete functionality
     menu.querySelector('.delete').addEventListener('click', () => {
         if (confirm('Are you sure you want to delete this event?')) {
-            eventBlock.parentElement.removeChild(eventBlock);
+            const cell = eventBlock.parentElement;
+            eventBlock.remove();
+            
+            // Get remaining blocks in the same cell
+            const remainingBlocks = cell.querySelectorAll('.event-block');
+            const totalBlocks = remainingBlocks.length;
+            
+            if (totalBlocks > 0) {
+                // Recalculate width and position for remaining blocks
+                const blockWidth = 96 / totalBlocks;
+                const gap = 2 / (totalBlocks - 1 || 1);
+                
+                // Reposition remaining blocks
+                remainingBlocks.forEach((block, index) => {
+                    block.style.width = `${blockWidth}%`;
+                    block.style.left = `${(index * (blockWidth + gap))}%`;
+                });
+            }
         }
         menu.remove();
     });
@@ -376,9 +426,9 @@ function createContextMenu(x, y, eventBlock) {
     });
 }
 
-// Add this function to handle event block listeners
+// Update the addEventBlockListeners function
 function addEventBlockListeners(eventBlock) {
-    eventBlock.addEventListener('dblclick', (e) => {
+    eventBlock.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         createContextMenu(e.pageX, e.pageY, eventBlock);
@@ -1421,3 +1471,47 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update the semester button to show Spring 2025 by default
     document.querySelector('.semester-button').innerHTML = 'Spring 2025 <span class="arrow">▼</span>';
 });
+
+// Update the openHerakPDF function
+function openHerakPDF() {
+    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
+    if (scheduleContainer) {
+        // Create PDF embed element
+        const pdfViewer = document.createElement('embed');
+        pdfViewer.src = 'Herak Center.pdf';
+        pdfViewer.type = 'application/pdf';
+        pdfViewer.style.width = '100%';
+        pdfViewer.style.height = '100%';
+        pdfViewer.style.minHeight = '600px';  // Match schedule's minimum height
+        
+        // Replace schedule with PDF viewer
+        scheduleContainer.innerHTML = '';
+        scheduleContainer.appendChild(pdfViewer);
+        
+        // Add PDF viewer styles
+        scheduleContainer.style.padding = '0';  // Remove padding for full-width PDF
+        scheduleContainer.style.overflow = 'hidden';  // Prevent scrollbars
+    }
+}
+
+// Add function to open Jepson First Floor PDF
+function openJepsonFirstFloorPDF() {
+    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
+    if (scheduleContainer) {
+        // Create PDF embed element
+        const pdfViewer = document.createElement('embed');
+        pdfViewer.src = 'Jepson1stFloor.pdf';
+        pdfViewer.type = 'application/pdf';
+        pdfViewer.style.width = '100%';
+        pdfViewer.style.height = '100%';
+        pdfViewer.style.minHeight = '600px';
+        
+        // Replace schedule with PDF viewer
+        scheduleContainer.innerHTML = '';
+        scheduleContainer.appendChild(pdfViewer);
+        
+        // Add PDF viewer styles
+        scheduleContainer.style.padding = '0';
+        scheduleContainer.style.overflow = 'hidden';
+    }
+}

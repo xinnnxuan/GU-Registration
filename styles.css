@@ -2317,3 +2317,14 @@ body.dark-mode .color-picker {
     background-color: #1e3a6d;
     border-color: #495057;
 }
+
+/* PDF viewer styles */
+embed[type="application/pdf"] {
+    border-radius: 8px;
+    border: none;
+}
+
+/* Dark mode styles for PDF container */
+body.dark-mode embed[type="application/pdf"] {
+    background-color: #023373;
+}
