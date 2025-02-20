@@ -278,10 +278,25 @@ main {
     overflow: hidden;  /* Ensure content doesn't overflow rounded corners */
 }
 
-.schedule-grid table {
-    border-collapse: collapse;
+.schedule-grid {
     width: 100%;
-    table-layout: fixed;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.schedule-grid table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;  /* This ensures equal column widths */
+}
+
+.schedule-grid td:first-child {
+    width: 80px;  /* Fixed width for time column */
+}
+
+.schedule-grid th:not(:first-child),
+.schedule-grid td:not(:first-child) {
+    width: calc((100% - 80px) / 5);  /* Evenly distribute remaining width */
 }
 
 /* Schedule grid header styles - light mode */
@@ -313,7 +328,7 @@ body.dark-mode .schedule-grid th {
 }
 
 .schedule-grid td {
-    position: relative;
+    position: relative;  /* For absolute positioning of event blocks */
     height: 60px;
     padding: 0;
     border: 1px solid #e0e4e8;
@@ -1600,19 +1615,18 @@ body.dark-mode .autocomplete-item:hover {
 
 /* Event block styles */
 .event-block {
-    background-color: #808080;
-    color: white;
+    position: absolute;
+    width: 100%;  /* Take full width of cell */
+    left: 0;      /* Align to left edge of cell */
     padding: 8px;
     border-radius: 4px;
-    position: absolute;
-    width: 96%;  /* Default width when single block */
-    left: 2%;    /* Default position when single block */
+    background-color: #808080;
+    color: white;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 2px;
-    z-index: 1;
-    transition: width 0.3s, left 0.3s;  /* Smooth transition for width/position changes */
+    box-sizing: border-box;  /* Include padding in width calculation */
 }
 
 .event-name {
@@ -2270,4 +2284,36 @@ body.dark-mode .user-controls {
 
 .user-controls {
     border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Color picker styles */
+.color-picker {
+    position: absolute;
+    background: white;
+    border: 1px solid #e0e4e8;
+    border-radius: 4px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    z-index: 1100;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+/* Dark mode styles */
+body.dark-mode .color-picker {
+    background-color: #1e3a6d;
+    border-color: #495057;
 }
