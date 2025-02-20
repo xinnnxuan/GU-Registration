@@ -12,11 +12,11 @@ function toggleTheme() {
         button.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
     });
     
-    // Update logo based on theme
+    // Update logo based on theme with new path
     if (isDarkMode) {
-        logoImg.src = './IMG_4570.jpg'; // Dark mode logo
+        logoImg.src = 'GU Logo/IMG_4570.jpg'; // Updated dark mode logo path
     } else {
-        logoImg.src = './IMG_4571.jpg'; // Light mode logo
+        logoImg.src = 'GU Logo/IMG_4571.jpg'; // Light mode logo should also be in GU Logo folder
     }
 }
 
@@ -1472,17 +1472,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.semester-button').innerHTML = 'Spring 2025 <span class="arrow">▼</span>';
 });
 
-// Update the openHerakPDF function
+// Update the openHerakPDF function with the correct directory path
 function openHerakPDF() {
     const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
     if (scheduleContainer) {
         // Create PDF embed element
         const pdfViewer = document.createElement('embed');
-        pdfViewer.src = 'Herak Center.pdf';
+        pdfViewer.src = 'Floor Plans/Herak Center.pdf';  // Updated path to include directory
         pdfViewer.type = 'application/pdf';
         pdfViewer.style.width = '100%';
         pdfViewer.style.height = '100%';
-        pdfViewer.style.minHeight = '600px';  // Match schedule's minimum height
+        pdfViewer.style.minHeight = '600px';
         
         // Replace schedule with PDF viewer
         scheduleContainer.innerHTML = '';
@@ -1494,13 +1494,13 @@ function openHerakPDF() {
     }
 }
 
-// Add function to open Jepson First Floor PDF
+// Also update the Jepson PDFs to use the same directory
 function openJepsonFirstFloorPDF() {
     const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
     if (scheduleContainer) {
         // Create PDF embed element
         const pdfViewer = document.createElement('embed');
-        pdfViewer.src = 'Jepson1stFloor.pdf';
+        pdfViewer.src = 'Floor Plans/Jepson1stFloor.pdf';  // Path is already correct
         pdfViewer.type = 'application/pdf';
         pdfViewer.style.width = '100%';
         pdfViewer.style.height = '100%';
@@ -1516,13 +1516,12 @@ function openJepsonFirstFloorPDF() {
     }
 }
 
-// Add function to open Jepson Basement PDF
 function openJepsonBasementPDF() {
     const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
     if (scheduleContainer) {
         // Create PDF embed element
         const pdfViewer = document.createElement('embed');
-        pdfViewer.src = 'JepsonBasementpdf.pdf';
+        pdfViewer.src = 'Floor Plans/JepsonBasementpdf.pdf';  // Path is already correct
         pdfViewer.type = 'application/pdf';
         pdfViewer.style.width = '100%';
         pdfViewer.style.height = '100%';
