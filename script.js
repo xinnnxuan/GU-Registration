@@ -51,7 +51,7 @@ function createMapSidebar() {
                     <span class="arrow">▼</span>
                 </div>
                 <div class="tree-content">
-                    <div class="tree-subitem">Lower-level</div>
+                    <div class="tree-subitem" onclick="openJepsonBasementPDF()">Lower-level</div>
                     <div class="tree-subitem" onclick="openJepsonFirstFloorPDF()">First floor</div>
                     <div class="tree-subitem">Second floor</div>
                 </div>
@@ -1501,6 +1501,28 @@ function openJepsonFirstFloorPDF() {
         // Create PDF embed element
         const pdfViewer = document.createElement('embed');
         pdfViewer.src = 'Jepson1stFloor.pdf';
+        pdfViewer.type = 'application/pdf';
+        pdfViewer.style.width = '100%';
+        pdfViewer.style.height = '100%';
+        pdfViewer.style.minHeight = '600px';
+        
+        // Replace schedule with PDF viewer
+        scheduleContainer.innerHTML = '';
+        scheduleContainer.appendChild(pdfViewer);
+        
+        // Add PDF viewer styles
+        scheduleContainer.style.padding = '0';
+        scheduleContainer.style.overflow = 'hidden';
+    }
+}
+
+// Add function to open Jepson Basement PDF
+function openJepsonBasementPDF() {
+    const scheduleContainer = document.querySelector('.schedule-container, .schedule-grid');
+    if (scheduleContainer) {
+        // Create PDF embed element
+        const pdfViewer = document.createElement('embed');
+        pdfViewer.src = 'JepsonBasementpdf.pdf';
         pdfViewer.type = 'application/pdf';
         pdfViewer.style.width = '100%';
         pdfViewer.style.height = '100%';
