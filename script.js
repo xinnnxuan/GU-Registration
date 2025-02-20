@@ -237,11 +237,61 @@ function createContextMenu(x, y, eventBlock) {
     });
 
     menu.querySelector('.color').addEventListener('click', () => {
-        const colors = ['#808080', '#4A90E2', '#B41231', '#357ABD', '#002467'];
-        const currentColor = eventBlock.style.backgroundColor;
-        const currentIndex = colors.indexOf(currentColor);
-        const nextColor = colors[(currentIndex + 1) % colors.length];
-        eventBlock.style.backgroundColor = nextColor;
+        // Remove any existing color picker
+        const existingPicker = document.querySelector('.color-picker');
+        if (existingPicker) {
+            existingPicker.remove();
+        }
+
+        // Create color picker
+        const colorPicker = document.createElement('div');
+        colorPicker.className = 'color-picker';
+        
+        // Define colors
+        const colors = [
+            '#808080', // Gray
+            '#4A90E2', // Blue
+            '#B41231', // Red
+            '#357ABD', // Light Blue
+            '#002467', // Dark Blue
+            '#2ECC71', // Green
+            '#E67E22', // Orange
+            '#9B59B6', // Purple
+            '#E74C3C', // Bright Red
+            '#1ABC9C'  // Turquoise
+        ];
+
+        // Add color options
+        colors.forEach(color => {
+            const colorOption = document.createElement('div');
+            colorOption.className = 'color-option';
+            colorOption.style.backgroundColor = color;
+            
+            colorOption.addEventListener('click', () => {
+                eventBlock.style.backgroundColor = color;
+                colorPicker.remove();
+                menu.remove();
+            });
+            
+            colorPicker.appendChild(colorOption);
+        });
+
+        // Position the color picker next to the context menu
+        const menuRect = menu.getBoundingClientRect();
+        colorPicker.style.left = `${menuRect.right + 5}px`;
+        colorPicker.style.top = `${menuRect.top}px`;
+
+        // Add to document
+        document.body.appendChild(colorPicker);
+
+        // Close color picker when clicking outside
+        document.addEventListener('click', function closeColorPicker(e) {
+            if (!colorPicker.contains(e.target) && !menu.contains(e.target)) {
+                colorPicker.remove();
+                document.removeEventListener('click', closeColorPicker);
+            }
+        });
+
         menu.remove();
     });
 
